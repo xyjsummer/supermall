@@ -5,12 +5,18 @@
       <div slot="center">购物街</div>
     </nav-bar>
 
-   <scroll class="content" ref="scroll" :probe-type="3" @scroll="contentScroll">
+   <scroll class="content" ref="scroll" :probe-type="3" :pull-up-load="true"
+           @scroll="contentScroll" @pullingUp = "loadMore">
+     <!--轮播图-->
      <home-swiper :banners="banners"></home-swiper>
+     <!--推荐栏-->
      <home-recommend-view :recommends = 'recommends'></home-recommend-view>
+     <!--独立组件的封装-->
      <feature-view></feature-view>
+     <!--控制条-->
      <tab-control class="tab-control" :titles="['流行','新款','精选']"
                   @tabClick="tabClick"></tab-control>
+     <!--商品栏显示-->
      <goods-list :goods="showGoods"></goods-list>
    </scroll>
 
@@ -90,9 +96,11 @@
       getHomeGoods(type){
         const page = this.goods[type].page+1
         getHomeGoods(type,page).then(res=>{
-          console.log(res);
+          // console.log(res);
           this.goods[type].list.push(...res.data.list);
           this.goods[type].page += 1;
+
+          this.finishPullUp();
         })
       },
       //事件监听方法
@@ -116,6 +124,18 @@
         }else{
           this.isShow = false;
         }
+      },
+      finishPullUp(){
+        //调用该方法实现多次监听上拉加载更多事件
+        this.$refs.scroll.scroll.finishPullUp();
+      },
+      refresh(){
+        //调用重新刷新，防止bug
+        this.$refs.scroll.scroll.refresh();
+      },
+      loadMore(){
+        this.getHomeGoods(this.currentType);
+        this.refresh();
       }
     }
   }
