@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <!--使用keep-alive保证页面不会被销毁-->
-    <keep-alive>
+    <keep-alive exclude="detail">
       <router-view></router-view>
     </keep-alive>
     <main-tab-bar></main-tab-bar>

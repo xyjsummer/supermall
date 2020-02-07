@@ -1,6 +1,6 @@
 <template>
   <div class="detail-swipe">
-    <swipe class="swipe">
+    <swipe v-if="topImages.length" class="detail-swipe">
       <swipe-item v-for="item in topImages">
         <img :src="item" alt="">
       </swipe-item>
@@ -28,7 +28,7 @@
 </script>
 
 <style scoped>
-  .swipe{
+  .detail-swipe{
     height: 300px;
     overflow: hidden;
   }

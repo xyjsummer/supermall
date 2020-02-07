@@ -7,7 +7,7 @@
       </slot>
       <div class="indicator">
         <slot name="indicator" v-if="showIndicator && slideCount>1">
-          <div v-for="(item,index) in slideCount" class="indi-item" :class="{active:index==currentIndex-1}" :key="index"></div>
+          <div v-for="(item,index) in slideCount" class="indi-item" :class="{active:index==currentIndex-1}" :key="item"></div>
         </slot>
       </div>
     </div>
@@ -49,7 +49,7 @@
           this.handleDom();
           //开启定时器
           this.startTimer();
-        },100)
+        },400)
       },
       methods:{
         startTimer(){
@@ -65,7 +65,7 @@
           //设置为正在滚动
           this.scrolling = true;
           //开始滚动动画
-          this.swipeStyle.transition = 'transform'+this.animDuration+'ms';
+          this.swipeStyle.transition = 'transform '+this.animDuration+'ms';
           this.setTransform(this.currentPosition);
           //判断滚动到的位置
           this.checkPosition();
