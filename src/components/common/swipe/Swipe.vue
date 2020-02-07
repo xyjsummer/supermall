@@ -1,6 +1,6 @@
 <template>
-    <div id="hy-swiper">
-      <div class="swiper" @touchstart="touchStart" @touchmove="touchMove" @touchend="touchEnd">
+    <div id="hy-swipe">
+      <div class="swipe" @touchstart="touchStart" @touchmove="touchMove" @touchend="touchEnd">
         <slot></slot>
       </div>
       <slot name="indicator">
@@ -15,7 +15,7 @@
 
 <script>
     export default {
-      name: "Swiper",
+      name: "Swipe",
       props:{
         interval:{
           type:Number,
@@ -37,8 +37,8 @@
       data() {
         return {
           slideCount:0,//元素个数
-          totalWidth:0,//swiper的宽度
-          swiperStyle:{},//swiper的样式
+          totalWidth:0,//swipe的宽度
+          swipeStyle:{},//swipe的样式
           currentIndex:1,//当前的index
           scrolling:false//是否正在滚动
         }
@@ -65,7 +65,7 @@
           //设置为正在滚动
           this.scrolling = true;
           //开始滚动动画
-          this.swiperStyle.transition = 'transform'+this.animDuration+'ms';
+          this.swipeStyle.transition = 'transform'+this.animDuration+'ms';
           this.setTransform(this.currentPosition);
           //判断滚动到的位置
           this.checkPosition();
@@ -75,7 +75,7 @@
         //校验正确的位置
         checkPosition(){
           window.setTimeout(()=>{
-            this.swiperStyle.transition = '0ms';
+            this.swipeStyle.transition = '0ms';
             if(this.currentIndex >= this.slideCount+1){
               this.currentIndex = 1;
               this.setTransform(-this.currentIndex*this.totalWidth);
@@ -89,27 +89,27 @@
         },
         //设置滚动的位置
         setTransform(position){
-          this.swiperStyle.transform = `translate3d(${position}px,0,0)`;
-          this.swiperStyle['-webkit-transform'] = `translate3d(${position}px),0,0`;
-          this.swiperStyle['-ms-transform'] = `translate3d(${position}px),0,0`;
+          this.swipeStyle.transform = `translate3d(${position}px,0,0)`;
+          this.swipeStyle['-webkit-transform'] = `translate3d(${position}px),0,0`;
+          this.swipeStyle['-ms-transform'] = `translate3d(${position}px),0,0`;
         },
         //操作DOM，在DOM前后添加Slide
         handleDom(){
           //获取要操作的元素
-          let swiperEl = document.querySelector('.swiper');
-          let slidesEls = swiperEl.getElementsByClassName('slide');
+          let swipeEl = document.querySelector('.swipe');
+          let slidesEls = swipeEl.getElementsByClassName('slide');
           //保存个数
           this.slideCount = slidesEls.length;
           //如果大于1个，那么在前后分别添加一个slide
           if(this.slideCount > 1){
             let cloneFirst = slidesEls[0].cloneNode(true);
             let cloneLast = slidesEls[this.slideCount-1].cloneNode(true);
-            swiperEl.insertBefore(cloneLast,slidesEls[0]);
-            swiperEl.appendChild(cloneFirst);
-            this.totalWidth = swiperEl.offsetWidth;
-            this.swiperStyle = swiperEl.style;
+            swipeEl.insertBefore(cloneLast,slidesEls[0]);
+            swipeEl.appendChild(cloneFirst);
+            this.totalWidth = swipeEl.offsetWidth;
+            this.swipeStyle = swipeEl.style;
           }
-          //让swiper元素，显示第一个（目前是显示前面添加的最后一个元素）
+          //让swipe元素，显示第一个（目前是显示前面添加的最后一个元素）
           this.setTransform(-this.totalWidth);
         },
         //拖动事件的处理
@@ -170,11 +170,11 @@
 </script>
 
 <style scoped>
-  #hy-swiper{
+  #hy-swipe{
     overflow: hidden;
     position: relative;
   }
-  .swiper{
+  .swipe{
     display: flex;
   }
   .indicator{

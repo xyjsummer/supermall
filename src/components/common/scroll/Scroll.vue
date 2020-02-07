@@ -52,7 +52,7 @@
       },
       refresh(){
         this.scroll.refresh();
-        console.log('------------');
+        // console.log('------------');
       }
     }
 

@@ -8,14 +8,14 @@
    <scroll class="content" ref="scroll" :probe-type="3" :pull-up-load="true"
            @scroll="contentScroll" @pullingUp = "loadMore">
      <!--轮播图-->
-     <home-swiper :banners="banners"></home-swiper>
+     <home-swipe :banners="banners" @swipeImageLoad="swipeImageLoad"></home-swipe>
      <!--推荐栏-->
      <home-recommend-view :recommends = 'recommends'></home-recommend-view>
      <!--独立组件的封装-->
      <feature-view></feature-view>
      <!--控制条-->
      <tab-control class="tab-control" :titles="['流行','新款','精选']"
-                  @tabClick="tabClick"></tab-control>
+                  @tabClick="tabClick" ref="tabControl"></tab-control>
      <!--商品栏显示-->
      <goods-list :goods="showGoods"></goods-list>
    </scroll>
@@ -27,7 +27,7 @@
 </template>
 
 <script>
-  import HomeSwiper from './childComps/HomeSwiper'
+  import HomeSwipe from './childComps/HomeSwipe'
   import HomeRecommendView from './childComps/HomeRecommendView'
   import FeatureView from './childComps/FeatureView'
 
@@ -45,7 +45,7 @@
   export default {
     name: "Home",
     components:{
-      HomeSwiper,
+      HomeSwipe,
       HomeRecommendView,
       FeatureView,
       NavBar,
@@ -66,7 +66,10 @@
           'sell':{page:0,list:[]}
         },
         currentType:'pop',
-        isShow:false
+        isShow:false,
+        tabOffsetTop:0,
+        isTabFixed:false,
+        saveY:0
       }
     },
     computed:{
@@ -91,6 +94,19 @@
         // this.$refs.scroll.refresh()
         refresh()
       },500)
+
+      //获取tabControl的offsetTop
+      //所有的组件都有一个属性$el，这个属性是用于获取组件中的元素的
+      // this.tabOffsetTop = this.$refs.tabControl
+      //但是这里获取到的信息并不准确（因为图片并未加载）
+      // console.log(this.$refs.tabControl.$el.offsetTop);
+    },
+    activated(){
+      this.$refs.scroll.scrollTo(0,this.saveY,0);
+      this.$refs.scroll.refresh();
+    },
+    deactivated(){
+      this.saveY = this.$refs.scroll.scroll.y;
     },
     methods:{
       //防抖函数
@@ -143,6 +159,9 @@
         }else{
           this.isShow = false;
         }
+        //决定tabControl是否吸顶（position:fixed）
+        this.isTabFixed = (-position.y) > 1000
+
       },
       finishPullUp(){
         //调用该方法实现多次监听上拉加载更多事件
@@ -155,6 +174,9 @@
       loadMore(){
         this.getHomeGoods(this.currentType);
         this.refresh();
+      },
+      swipeImageLoad(){
+        // console.log(this.$refs.tabControl.$el.offsetTop);
       }
     }
   }
@@ -171,6 +193,7 @@
     background-color: var(--color-tint);
     color:white;
 
+    /*在使用浏览器原生滚动时，为了让导航不跟随一起滚动*/
     position: fixed;
     left: 0;
     right: 0;
@@ -199,6 +222,5 @@
   /*  overflow: hidden;*/
   /*  margin-top: 44px;*/
   /*}*/
-
 
 </style>

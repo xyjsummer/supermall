@@ -29,9 +29,9 @@
         itemClick(){
           //获取ID
           const iid = this.goodsItem.iid;
-          console.log(iid);
+          // console.log(iid);
           //跳转到详情页
-          this.$router.push({path:'/detail',query:{iid}})
+          this.$router.push('/detail/'+iid)
         },
         imgLoad(){
           //事件总线
