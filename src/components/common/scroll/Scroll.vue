@@ -49,6 +49,10 @@
     methods:{
       scrollTo(x,y,time){
         this.scroll.scrollTo(x,y,time)
+      },
+      refresh(){
+        this.scroll.refresh();
+        console.log('------------');
       }
     }
 

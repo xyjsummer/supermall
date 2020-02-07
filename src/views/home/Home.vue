@@ -40,6 +40,7 @@
   import {getHomeMultidata} from "../../network/home";
   import {getHomeGoods} from "../../network/home";
 
+  import {debounce} from "../../common/utils";
 
   export default {
     name: "Home",
@@ -82,9 +83,27 @@
       this.getHomeGoods('sell')
     },
     mounted(){
-
+      //增加防抖动操作(防止多次频繁调用)
+      // const refresh = this.debounce(this.$refs.scroll.refresh)
+      const refresh = debounce(this.$refs.scroll.refresh)
+      //利用事件总线监听item中图片加载完成
+      this.$bus.$on('itemImageLoad',()=>{
+        // this.$refs.scroll.refresh()
+        refresh()
+      },500)
     },
     methods:{
+      //防抖函数
+      // debounce(func,delay){
+      //   let timer = null;
+      //   return function(...args){
+      //     if(timer) clearTimeout(timer);
+      //     timer = setTimeout(()=>{
+      //       func.apply(this,args)
+      //     },delay)
+      //   }
+      // },
+
       //网络请求相关方法
       getHomeMultidata(){
         getHomeMultidata().then(res=>{

@@ -33,9 +33,10 @@
           //跳转到详情页
           this.$router.push({path:'/detail',query:{iid}})
         },
-        // imgLoad(){
-        //   // this.$bus.$emit('imgLoad')
-        // }
+        imgLoad(){
+          //事件总线
+          this.$bus.$emit('itemImageLoad')
+        }
       }
     }
 </script>
