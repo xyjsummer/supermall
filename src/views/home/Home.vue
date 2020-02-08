@@ -42,6 +42,8 @@
 
   import {debounce} from "../../common/utils";
 
+  import {itemListenerMixin} from "common/mixin";
+
   export default {
     name: "Home",
     components:{
@@ -88,12 +90,12 @@
     mounted(){
       //增加防抖动操作(防止多次频繁调用)
       // const refresh = this.debounce(this.$refs.scroll.refresh)
-      const refresh = debounce(this.$refs.scroll.refresh)
-      //利用事件总线监听item中图片加载完成
-      this.$bus.$on('itemImageLoad',()=>{
-        // this.$refs.scroll.refresh()
-        refresh()
-      },500)
+      // const refresh = debounce(this.$refs.scroll.refresh)
+      // //利用事件总线监听item中图片加载完成
+      // this.$bus.$on('itemImageLoad',()=>{
+      //   // this.$refs.scroll.refresh()
+      //   refresh()
+      // },500)
 
       //获取tabControl的offsetTop
       //所有的组件都有一个属性$el，这个属性是用于获取组件中的元素的
@@ -101,12 +103,17 @@
       //但是这里获取到的信息并不准确（因为图片并未加载）
       // console.log(this.$refs.tabControl.$el.offsetTop);
     },
+    //使用混入，避免重复代码
+    mixins:[itemListenerMixin],
     activated(){
       this.$refs.scroll.scrollTo(0,this.saveY,0);
       this.$refs.scroll.refresh();
     },
     deactivated(){
+      //保存Y值
       this.saveY = this.$refs.scroll.scroll.y;
+      //取消全局事件的监听
+      this.$bus.$off('itemImgLoad',this.itemImgListener)
     },
     methods:{
       //防抖函数

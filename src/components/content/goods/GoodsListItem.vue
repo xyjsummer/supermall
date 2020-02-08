@@ -1,6 +1,6 @@
 <template>
     <div class="goods-item" @click="itemClick">
-      <img :key="showImage" :src="goodsItem.show.img" alt="">
+      <img :key="showImage" :src="showImage" alt="">
       <div class="goods-info">
         <p>{{goodsItem.title}}</p>
         <span class="price">{{goodsItem.price}}</span>
@@ -22,7 +22,7 @@
       },
       computed:{
         showImage(){
-          return this.goodsItem.show.img
+          return this.goodsItem.image|| this.goodsItem.show.img;
         }
       },
       methods:{

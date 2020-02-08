@@ -7,6 +7,8 @@
         <detail-shop-info :shop="shop"></detail-shop-info>
         <detail-goods-info :detail-info="detailInfo" @imageLoad="imageLoad"></detail-goods-info>
         <detail-param-info :param-info="paramInfo"></detail-param-info>
+        <detail-comment-info :comment-info="commentInfo"></detail-comment-info>
+        <good-list :goods="recommends"></good-list>
       </scroll>
       </div>
 </template>
@@ -18,10 +20,14 @@
   import DetailShopInfo from './childComps/DetailShopInfo'
   import DetailGoodsInfo from './childComps/DetailGoodsInfo'
   import DetailParamInfo from './childComps/DetailParamInfo'
+  import DetailCommentInfo from './childComps/DetailCommentInfo'
 
-  import Scroll from '../../components/common/scroll/Scroll'
+  import Scroll from '@/components/common/scroll/Scroll'
+  import GoodList from '@/components/content/goods/GoodList'
 
-  import {getDetail,Goods,Shop,GoodsParam} from '../../network/detail'
+  import {getDetail,getRecommend,Goods,Shop,GoodsParam} from 'network/detail'
+
+  import {itemListenerMixin} from "common/mixin";
 
   export default {
     name: "detail",
@@ -32,7 +38,9 @@
       DetailShopInfo,
       DetailGoodsInfo,
       DetailParamInfo,
-      Scroll
+      DetailCommentInfo,
+      Scroll,
+      GoodList
     },
     data(){
       return{
@@ -42,11 +50,14 @@
         shop:{},
         detailInfo:{},
         paramInfo:{},
+        commentInfo:{},
+        recommends:[]
       }
     },
     created(){
       //保存iid
       this.iid = this.$route.params.iid;
+      //请求详情数据
       getDetail(this.iid).then(res =>{
         console.log(res);
         //根据iid请求详情数据
@@ -66,7 +77,24 @@
 
         //获取参数信息
         this.paramInfo = new GoodsParam(data.itemParams.info,data.itemParams.rule)
+
+        //取出评论信息
+        if(data.rate.cRate!=0){
+          this.commentInfo = data.rate.list[0]
+        }
       })
+      //请求推荐数据
+      getRecommend().then(res=>{
+        console.log(res);
+        this.recommends = res.data.list
+      })
+    },
+    mounted(){
+      //使用下面的混入，进行替代
+    },
+    mixins:[itemListenerMixin],
+    destroyed(){
+      this.$bus.$off('itemImgLoad',this.itemImgListener)
     },
     methods:{
       imageLoad(){

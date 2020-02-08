@@ -8,6 +8,12 @@ export function getDetail(iid) {
   })
 }
 
+export function getRecommend() {
+  return request({
+    url:'/recommend'
+  })
+}
+
 //整合数据，并封装到一个对象上
 export class Goods{
   constructor(itemInfo,colums,services){
