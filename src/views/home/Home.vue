@@ -21,7 +21,7 @@
    </scroll>
 
     <!--组件不能直接监听点击，需要加.native-->
-    <back-top @click.native="backClick" v-show="isShow"></back-top>
+    <back-top @click.native="backClick" v-show="isShowBackTop"></back-top>
 
   </div>
 </template>
@@ -35,7 +35,9 @@
   import TabControl from '../../components/content/tabControl/TabControl'
   import GoodsList from '../../components/content/goods/GoodList'
   import Scroll from '../../components/common/scroll/Scroll'
-  import BackTop from '../../components/common/backTop/BackTop'
+  // import BackTop from '../../components/common/backTop/BackTop'
+
+  import {backTopMixin} from "../../common/mixin";
 
   import {getHomeMultidata} from "../../network/home";
   import {getHomeGoods} from "../../network/home";
@@ -54,7 +56,7 @@
       TabControl,
       GoodsList,
       Scroll,
-      BackTop
+      // BackTop
     },
     data(){
       return {
@@ -68,7 +70,7 @@
           'sell':{page:0,list:[]}
         },
         currentType:'pop',
-        isShow:false,
+        // isShow:false,
         tabOffsetTop:0,
         isTabFixed:false,
         saveY:0
@@ -104,7 +106,7 @@
       // console.log(this.$refs.tabControl.$el.offsetTop);
     },
     //使用混入，避免重复代码
-    mixins:[itemListenerMixin],
+    mixins:[itemListenerMixin,backTopMixin],
     activated(){
       this.$refs.scroll.scrollTo(0,this.saveY,0);
       this.$refs.scroll.refresh();
@@ -160,12 +162,7 @@
         this.$refs.scroll.scrollTo(0,0,300)
       },
       contentScroll(position){
-        //设置图标是否可见
-        if(-position.y>1000){
-          this.isShow = true;
-        }else{
-          this.isShow = false;
-        }
+        this.isShow(position);
         //决定tabControl是否吸顶（position:fixed）
         this.isTabFixed = (-position.y) > 1000
 
