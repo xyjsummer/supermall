@@ -6,10 +6,11 @@ import {
 export default {
   // mutation的作用只是为了修改state中的属性
   //mutation中的方法尽可能完成单一事件
-  [ADD_ACOUNTER](state,payload){
+  [ADD_COUNTER](state,payload){
     payload.count += 1;
   },
   [ADD_TO_CART](state,payload){
-    state.cartList.push(payload)
+    payload.checked = false;
+    state.cartList.push(payload);
   }
 }

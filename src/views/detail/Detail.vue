@@ -58,6 +58,7 @@
         goods:{},
         shop:{},
         detailInfo:{},
+        itemInfo:{},
         paramInfo:{},
         commentInfo:{},
         recommends:[],
@@ -75,6 +76,7 @@
         // console.log(res);
         //根据iid请求详情数据
         const data = res.result;
+
         this.topImages = data.itemInfo.topImages;
 
         //获取商品信息
@@ -87,6 +89,7 @@
 
         //保存商品详情数据
         this.detailInfo = data.detailInfo;
+        this.itemInfo = data.itemInfo;
 
         //获取参数信息
         this.paramInfo = new GoodsParam(data.itemParams.info,data.itemParams.rule)
@@ -145,12 +148,13 @@
         //获取商品信息
         const product = {};
         product.image = this.topImages[0];
-        product.title = this.detailInfo.title;
-        product.desc = this.detailInfo.desc;
-        product.price = this.detailInfo.realPrice;
         product.iid = this.iid;
+        product.desc = this.detailInfo.desc;
+        product.price = this.itemInfo.lowNowPrice;
+        product.title = this.itemInfo.title;
+        // product.count = 1;
         //将商品加入到购物车中
-        this.$store.commit('addCart',product)
+        this.$store.dispatch('addCart',product)
 
       },
       imageLoad(){
