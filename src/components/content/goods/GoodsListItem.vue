@@ -1,6 +1,8 @@
 <template>
     <div class="goods-item" @click="itemClick">
-      <img :key="showImage" :src="showImage" alt="">
+      <!--使用lazyload后进行的懒加载-->
+      <img v-lazy="showImage" alt="">
+<!--      <img :key="showImage" :src="showImage" alt="">-->
       <div class="goods-info">
         <p>{{goodsItem.title}}</p>
         <span class="price">{{goodsItem.price}}</span>

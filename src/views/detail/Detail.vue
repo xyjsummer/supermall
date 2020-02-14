@@ -12,6 +12,8 @@
       </scroll>
       <detail-bottom-bar @addCart="addToCart"></detail-bottom-bar>
       <back-top @click.native="backClick" v-show="isShowBackTop"></back-top>
+
+<!--      <toast :message="message" :show="show"></toast>-->
       </div>
 </template>
 
@@ -27,6 +29,7 @@
 
   import Scroll from 'components/common/scroll/Scroll'
   import GoodList from 'components/content/goods/GoodList'
+  // import Toast from 'components/common/toast/Toast'
 
   import {getDetail,getRecommend,Goods,Shop,GoodsParam} from 'network/detail'
 
@@ -34,7 +37,9 @@
   import {backTopMixin} from "../../common/mixin";
   import {debounce} from "common/utils";
 
+  import {mapActions} from 'vuex'
   // import BackTop from '../../components/common/backTop/BackTop'
+
 
   export default {
     name: "detail",
@@ -49,6 +54,7 @@
       DetailBottomBar,
       Scroll,
       GoodList,
+      // Toast
       // BackTop
     },
     data(){
@@ -66,6 +72,8 @@
         getThemeTopY: null,
         currentIndex:0,
         // isShowBackTop:false
+        // message:'',
+        // show:false
       }
     },
     created(){
@@ -144,6 +152,8 @@
       this.$bus.$off('itemImgLoad',this.itemImgListener)
     },
     methods:{
+      ...mapActions(['addCart']),
+
       addToCart(){
         //获取商品信息
         const product = {};
@@ -152,10 +162,12 @@
         product.desc = this.detailInfo.desc;
         product.price = this.itemInfo.lowNowPrice;
         product.title = this.itemInfo.title;
-        // product.count = 1;
-        //将商品加入到购物车中
-        this.$store.dispatch('addCart',product)
 
+        //将商品加入到购物车中
+        //import mapActions后，直接进行调用
+        this.addCart(product).then(res=>{
+          this.$toast.show(res,2000)
+        })
       },
       imageLoad(){
         this.$refs.scroll.refresh();

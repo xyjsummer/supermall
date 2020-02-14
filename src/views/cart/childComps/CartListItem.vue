@@ -1,7 +1,7 @@
 <template>
   <div id="shop-item">
     <div class="item-selector">
-      <CheckButton :is-checked="itemInfo.checked" @click.native="checkedChange"></CheckButton>
+      <check-button :is-checked="itemInfo.checked" @click.native="checkedChange"></check-button>
     </div>
     <div class="item-img">
       <img :src="itemInfo.image" alt="商品图片">
@@ -11,7 +11,7 @@
       <div class="item-desc">{{itemInfo.desc}}</div>
       <div class="info-bottom">
         <div class="item-price left">￥{{itemInfo.price}}</div>
-        <div class="item-count right">x{{itemInfo.count}}</div>
+        <div class="item-count right"><button @click="subCount">-</button> x{{itemInfo.count}} <button @click="addCount">+</button></div>
       </div>
     </div>
   </div>
@@ -35,6 +35,14 @@
     methods:{
       checkedChange(){
         this.itemInfo.checked = !this.itemInfo.checked;
+      },
+      addCount(){
+        this.itemInfo.count++;
+      },
+      subCount(){
+        if(this.itemInfo.count>0){
+          this.itemInfo.count--;
+        }
       }
     }
   }
